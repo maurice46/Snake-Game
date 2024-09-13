@@ -2,25 +2,20 @@ import turtle
 import random
 import time
 
-# screen
 screen = turtle.Screen()
 screen.title("Snake Game")
 screen.bgcolor("black")
 screen.setup(width=600, height=600)
 screen.tracer(0)
 
-# snake head
 head = turtle.Turtle()
 head.speed(0)
 head.shape("square")
 head.color("green")
-# turtle operates with pendown state by default
-# using penup() will stop drawing when turtle is moved
 head.penup()
 head.goto(0, 0)
 head.direction = "stop"
 
-# snake food
 food = turtle.Turtle()
 food.speed(0)
 food.shape("circle")
@@ -29,16 +24,15 @@ food.penup()
 food.goto(0,0)
 
 # scoreboard
-pen = turtle.Turtle()
-pen.speed(0)
-pen.shape("square")
-pen.color("white")
-pen.penup()
-pen.hideturtle()
-pen.goto(0,260)
-pen.write("Score: 0 High Score: 0", align="center", font=("Courier", 24, "normal"))
+scoreboard = turtle.Turtle()
+scoreboard.speed(0)
+scoreboard.shape("square")
+scoreboard.color("white")
+scoreboard.penup()
+scoreboard.hideturtle()
+scoreboard.goto(0,260)
+scoreboard.write("Score: 0 High Score: 0", align="center", font=("Courier", 24, "normal"))
 
-# variables for the game
 score = 0
 high_score = 0
 delay = 0.11
@@ -63,7 +57,6 @@ def move():
     if head.direction == "left":
         x = head.xcor()
         head.setx(x - 20)
-
 
 # create a function to listen to the keyboard
 def move_up():
@@ -92,40 +85,39 @@ screen.onkeypress(move_right, "d")
 while True:
     screen.update()
 
-    # Check for a collision with the border
+    # check for a collision with the border
     if (head.xcor() > 290 or head.xcor() < -290 or 
             head.ycor() > 255 or head.ycor() < -290):
         time.sleep(1)
         head.goto(0, 0)
         head.direction = "stop" 
 
-        # Hide the segments
+        # hide the segments
         for segment in segments:
             segment.goto(1000, 1000)
 
-        # Clear the segments list
+        # clear the segments list
         segments.clear()
 
-        # Reset the score
+        # reset the score
         score = 0
 
-        # Update the score
-        pen.clear()
-        pen.write("Score: {} High Score: {}".format(score, high_score), 
+        # update the score
+        scoreboard.clear()
+        scoreboard.write("Score: {} High Score: {}".format(score, high_score), 
                   align="center", font=("Courier", 24, "normal"))
 
 
-    # Move the snake
     move()
 
-    # Check for a collision with the food
+    # check for a collision with the food
     if head.distance(food) < 20:
-        # Move the food to a new random position
+        # move the food to a new random position
         x = random.randint(-290, 290)
         y = random.randint(-290, 250)
         food.goto(x, y)
 
-        # Add a new segment to the snake
+        # add a new segment to the snake
         new_segment = turtle.Turtle()
         new_segment.speed(0)
         new_segment.shape("square")
@@ -133,15 +125,15 @@ while True:
         new_segment.penup()
         segments.append(new_segment)
 
-        # Update the score
+        # update the score
         score += 1
         if score > high_score:
             high_score = score
-        pen.clear()
-        pen.write("Score: {} High Score: {}".format(score, high_score),
+        scoreboard.clear()
+        scoreboard.write("Score: {} High Score: {}".format(score, high_score),
                   align="center", font=("Courier", 24, "normal"))
 
-    # Move the segments
+    # move the segments
     for index in range(len(segments) - 1, 0, -1):
         x = segments[index - 1].xcor()
         y = segments[index - 1].ycor()
@@ -152,27 +144,23 @@ while True:
         y = head.ycor()
         segments[0].goto(x, y)
 
-    # Check for collisions with the segments
+    # check for collisions with the segments
     for segment in segments[1:]:
         if segment.distance(head) < 20:
             time.sleep(1)
             head.goto(0, 0)
             head.direction = "stop"
 
-            # Hide the segments
             for segment in segments:
                 segment.goto(1000, 1000)
 
-            # Clear the segments list
             segments.clear()
 
-            # Reset the score
             score = 0
 
-            # Update the score
-            pen.clear()
-            pen.write("Score: {} High Score: {}".format(score, high_score),
+            scoreboard.clear()
+            scoreboard.write("Score: {} High Score: {}".format(score, high_score),
                       align="center", font=("Courier", 24, "normal"))
 
-    # Delay the game loop
+    # delay game loop
     time.sleep(delay)
